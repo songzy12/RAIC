@@ -62,18 +62,37 @@ public final class MyStrategy implements Strategy {
         
         if (tick == 0) {
             vehicles = world.getNewVehicles();
+            double [] x = new double[5];
+            double [] y = new double[5];
             for (int i = 0; i < 5; ++i) {
                 positions[i] = getTopLeft(me, types[i]);
+                x[i] = positions[i][0];
+                y[i] = positions[i][1];
+            }
+            
+            Arrays.sort(x);
+            Arrays.sort(y);
+            
+            Arrays.sort(positions, new java.util.Comparator<double[]>() {
+                public int compare(double[] a, double[] b) {
+                    return Double.compare(a[0], b[0]);
+                }
+            });
+            
+            positions[2] = new double[] {x[2], y[2]};
+            
+            for (int i = 0; i < 5; ++i) {
                 System.out.println(Arrays.toString(positions[i]));
             }
+            
             System.out.println();
             updated_vehicles = vehicles;
             return;
         }        
         
-        // move FIGHTER to HELICOPTER
+        // scale ARRV
         
-        if (tick == 1) {
+        /*if (tick == 1) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
             move.setVehicleType(VehicleType.ARRV);
             move.setRight(world.getWidth());
@@ -88,7 +107,9 @@ public final class MyStrategy implements Strategy {
             move.setY(start[1]);
             move.setFactor(2);
             return;
-        }
+        }*/
+        
+        // move figher to arrv
         
         if (tick == 50) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -98,9 +119,9 @@ public final class MyStrategy implements Strategy {
             return;
         }
 
-        if (tick == 100) {
+        if (tick == 51) {
             double [] start = getTopLeft(me, VehicleType.FIGHTER);
-            double [] end = getTopLeft(me, VehicleType.TANK);
+            double [] end = positions[2];
             System.out.println(Arrays.toString(start));
             System.out.println(Arrays.toString(end));
             move.setAction(ActionType.MOVE);
@@ -109,7 +130,9 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick == 300) {
+        // scale tank
+        
+        /*if (tick == 300) {
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setVehicleType(VehicleType.TANK);
             move.setRight(world.getWidth());
@@ -124,11 +147,21 @@ public final class MyStrategy implements Strategy {
             move.setY(start[1]);
             move.setFactor(2);
             return;
+        }*/
+        
+        // move tank to arrv
+        
+        if (tick == 52) {
+            move.setAction(ActionType.CLEAR_AND_SELECT);
+            move.setVehicleType(VehicleType.TANK);
+            move.setRight(world.getWidth());
+            move.setBottom(world.getHeight());       
+            return;
         }
 
-        if (tick == 350) {
+        if (tick == 53) {
             double [] start = getTopLeft(me, VehicleType.TANK);
-            double [] end = getTopLeft(me, VehicleType.ARRV);
+            double [] end = positions[2];
             System.out.println(Arrays.toString(start));
             System.out.println(Arrays.toString(end));
             move.setAction(ActionType.MOVE);
@@ -138,9 +171,9 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        // move FIGHTER and HELICOPTER to ARRV
+        // move helicopter to ifv
         
-        if (tick == 530) {
+        if (tick == 54) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
             move.setVehicleType(VehicleType.HELICOPTER);
             move.setRight(world.getWidth());
@@ -148,9 +181,9 @@ public final class MyStrategy implements Strategy {
             return;
         }
 
-        if (tick == 531) {
+        if (tick == 55) {
             double [] start = getTopLeft(me, VehicleType.HELICOPTER);
-            double [] end = getTopLeft(me, VehicleType.IFV);
+            double [] end = positions[2];
             System.out.println(Arrays.toString(start));
             System.out.println(Arrays.toString(end));
             move.setAction(ActionType.MOVE);
@@ -159,7 +192,9 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick == 750) {
+        // scale ifv
+        
+        /*if (tick == 750) {
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setVehicleType(VehicleType.IFV);
             move.setRight(world.getWidth());
@@ -174,13 +209,21 @@ public final class MyStrategy implements Strategy {
             move.setY(start[1]);
             move.setFactor(2);
             return;
-        }
+        }*/
         
-        // move FIGHTER, HELICOPTER, ARRV to IFV
+        // move ifv to arrv
+        
+        if (tick == 56) {
+            move.setAction(ActionType.CLEAR_AND_SELECT);
+            move.setVehicleType(VehicleType.IFV);
+            move.setRight(world.getWidth());
+            move.setBottom(world.getHeight());       
+            return;
+        }
 
-        if (tick == 800) {
+        if (tick == 57) {
             double [] start = getTopLeft(me, VehicleType.IFV);
-            double [] end = getTopLeft(me, VehicleType.ARRV);
+            double [] end = positions[2];
             System.out.println(Arrays.toString(start));
             System.out.println(Arrays.toString(end));
             move.setAction(ActionType.MOVE);
@@ -191,44 +234,46 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        // move others to TANK
-        
-        // move to Center
-        
-        if (tick == 1000) {
-            move.setAction(ActionType.ADD_TO_SELECTION);
-            move.setVehicleType(VehicleType.TANK);
-            move.setRight(world.getWidth());
-            move.setBottom(world.getHeight());       
-            return;
-        }
-        
-        
-        if (tick == 1201) {
-            move.setAction(ActionType.ADD_TO_SELECTION);
-            move.setVehicleType(VehicleType.FIGHTER);
-            move.setRight(world.getWidth());
-            move.setBottom(world.getHeight());       
-            return;
-        }
-        
-        
-        if (tick == 1202) {
-            move.setAction(ActionType.ADD_TO_SELECTION);
+        if (tick == 58) {
+            move.setAction(ActionType.CLEAR_AND_SELECT);
             move.setVehicleType(VehicleType.ARRV);
             move.setRight(world.getWidth());
             move.setBottom(world.getHeight());       
             return;
         }
+
+        if (tick == 59) {
+            double [] start = getTopLeft(me, VehicleType.ARRV);
+            double [] end = positions[2];
+            System.out.println(Arrays.toString(start));
+            System.out.println(Arrays.toString(end));
+            move.setAction(ActionType.MOVE);
+            move.setX(end[0] - start[0] + 3);
+            move.setY(end[1] - start[1] + 3);
+            move.setMaxSpeed(game.getIfvSpeed());
+            
+            return;
+        }
         
-        if (tick == 1203) {
+        // select all
+        
+        if (tick == 1000) {
+            move.setAction(ActionType.ADD_TO_SELECTION);
+            move.setRight(world.getWidth());
+            move.setBottom(world.getHeight());       
+            return;
+        }
+        
+        // scale all
+        
+        /*if (tick == 1003) {
             move.setAction(ActionType.SCALE);
             double [] start = getTopLeft(me, VehicleType.ARRV);
             move.setX(start[0]);
             move.setY(start[1]);
             move.setFactor(0.5);
             return;
-        }
+        }*/
         
         if (tick == 2500) {
             double[] start = findEnemy(world.getOpponentPlayer());
@@ -277,6 +322,23 @@ public final class MyStrategy implements Strategy {
             move.setMaxSpeed(game.getTankSpeed());
             return;
         }
+        
+        
+        
+        if (tick == 1000) {
+            double[] start = findEnemy(world.getOpponentPlayer());
+            double[] end = findEnemy(me);
+            
+            System.out.println();
+            System.out.println(Arrays.toString(start));
+            System.out.println(Arrays.toString(end));
+            
+            move.setAction(ActionType.MOVE);
+            move.setX(end[0] - start[0]);
+            move.setY(end[1] - start[1]);
+            move.setMaxSpeed(game.getTankSpeed());
+            return;
+        }
     }
     private Vehicle[] vehicles;    
     private Vehicle[] updated_vehicles;
@@ -287,4 +349,5 @@ public final class MyStrategy implements Strategy {
                                    VehicleType.ARRV};
     private double[][] positions = new double[5][2];
     private int cnt = 0;
+    private boolean move = false;
 }
