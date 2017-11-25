@@ -21,8 +21,26 @@ public final class MyStrategy implements Strategy {
         
         update_vehicle();
         
-        if (tick < 3000) {
+        if (tick < 2500) {
             line_up(tick);
+            return;
+        }
+        
+        if (tick >= 2500 && tick < 2502) {
+            tick -= 2500;
+            if (tick == 0) {
+                move.setAction(ActionType.CLEAR_AND_SELECT);
+                move.setRight(world.getWidth());
+                move.setBottom(world.getHeight());       
+            }
+            
+            if (tick == 1) {
+                move.setAction(ActionType.ROTATE);
+                move.setX((middle + right) / 2);
+                move.setY((middle + right) / 2);
+                move.setAngle(3.1415 / 4);
+                move.setMaxSpeed(game.getTankSpeed() * game.getSwampTerrainSpeedFactor());
+            }
             return;
         }
         
@@ -118,10 +136,6 @@ public final class MyStrategy implements Strategy {
     }
     
     private void line_up(int tick) {
-        
-        double delta = game.getVehicleRadius();
-        double left = 18, middle = 92 - 7 * delta, right = 166 - 14 * delta;
-        double factor = 3;
         
         if (tick < 1000) {        
             // permutate
@@ -309,6 +323,11 @@ public final class MyStrategy implements Strategy {
     
     private Position [] positions0 = new Position[3];
     private Position [] positions1 = new Position[2];
+    
+    private double delta = 2; //game.getVehicleRadius();
+    private double left = 18, middle = 92 - 7 * delta, right = 166 - 14 * delta;
+    private double factor = 3;
+    
 }
 
 class Position {
