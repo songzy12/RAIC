@@ -26,14 +26,6 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick >= 3000 && tick % 1200 == 0) {
-            Vehicle v = find_nearest_enemy(world.getOpponentPlayer(), true);
-            move.setAction(ActionType.TACTICAL_NUCLEAR_STRIKE);
-            move.setX(v.getX());
-            move.setY(v.getY());
-            move.setVehicleId(find_vehicle(me, VehicleType.ARRV).getId());
-        }
-        
         if (tick >= 3000 && tick % 500 == 0) {
             Vehicle v1 = find_nearest_enemy(world.getOpponentPlayer(), false);
             Vehicle v2 = find_nearest_enemy(me, false);
@@ -195,44 +187,52 @@ public final class MyStrategy implements Strategy {
         }
         
         
-        if (tick >= 1500 && tick < 1508) {
+        if (tick >= 1600 && tick < 1608) {
             // merge
-            if (tick >= 1500 && tick < 1502) {
-                move_to(positions0[0].type, middle - left, 0, tick - 1500);
-            } else if (tick >= 1502 && tick < 1504) {
-                move_to(positions0[2].type, middle - right, 0, tick - 1502);
-            } else if (tick >= 1504 && tick < 1506) {
-                move_to(positions1[0].type, middle - left, 0, tick - 1504);
-            }  else if (tick >= 1506 && tick < 1508) {
-                move_to(positions1[1].type, middle - right, 0, tick - 1506);
+            if (tick >= 1600 && tick < 1602) {
+                move_to(positions0[0].type, middle - left, 0, tick - 1600);
+            } else if (tick >= 1602 && tick < 1604) {
+                move_to(positions0[2].type, middle - right, 0, tick - 1602);
+            } else if (tick >= 1604 && tick < 1606) {
+                move_to(positions1[0].type, middle - left, 0, tick - 1604);
+            }  else if (tick >= 1606 && tick < 1608) {
+                move_to(positions1[1].type, middle - right, 0, tick - 1606);
             }
-            if (tick == 1505)
+            if (tick == 1605)
                 System.out.println();
             return;
         }
         
-        if (tick >= 2100 && tick < 2102) {
+        if (tick >= 2100 && tick < 2460) {
             // scale
-            tick -= 2100;
-            if (tick == 0) {
-                move.setAction(ActionType.CLEAR_AND_SELECT);
-                move.setRight(world.getWidth());
-                move.setBottom(world.getHeight()); 
-            }
+            int step = (tick - 2100) / 60;
+            int start = step * 6 + 1;
+            int group = ((tick - 2100) % 60) / 2 + 1;
+            if (group < start)
+                return;
+                    
+            double l = left + (group - 1) * 3 * delta - delta;
+            double r = left + (group) * 3 * delta - delta;
             
-            if (tick == 1) {            
+            if (tick % 2 == 0) {
+                // select
+                System.out.println("group " + group + " " + l + " " + r);
+                move.setAction(ActionType.CLEAR_AND_SELECT);
+                move.setLeft(l);
+                move.setRight(r);          
+                move.setTop(0);
+                move.setBottom(world.getHeight());                
+            } else {
+                // scale                
                 move.setAction(ActionType.SCALE);
-                move.setX(middle + 12 * delta + (right - middle) / 2);
-                move.setY(middle - 6 * delta + (right - middle) / 2);
-                move.setFactor(1.0 / factor);
-                move.setMaxSpeed(game.getTankSpeed());
+                move.setFactor(1 / factor);
+                move.setX(l + delta);
+                move.setY(middle + (right-middle) / 2);
             }
-            if (tick == 1)
-                System.out.println();
             return;
         }
         
-        if (tick == 2102) {
+        if (tick == 2460) {
             // select all
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setRight(world.getWidth());
