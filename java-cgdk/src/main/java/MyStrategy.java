@@ -127,8 +127,8 @@ public final class MyStrategy implements Strategy {
     
     private void line_up(int tick) {
         
-        double left = 18, middle = 92, right = 166;
         double delta = game.getVehicleRadius();
+        double left = 18, middle = 92 - 7 * delta, right = 166 - 14 * delta;
         double factor = 3;
         
         if (tick < 1000) {        
@@ -139,57 +139,78 @@ public final class MyStrategy implements Strategy {
                 move_to(positions0[1].type, middle - positions0[1].x, 0, tick - 2);
             } else if (tick >= 4 && tick < 6 && positions0[2].x != right) {
                 move_to(positions0[2].type, right - positions0[2].x, 0, tick - 4);
-            } else if (tick >= 500 && tick < 502 && positions0[0].y != middle + 2 * delta) {
-                move_to(positions0[0].type, 0, middle + 2 * delta - positions0[0].y, tick - 500);
-            } else if (tick >= 502 && tick < 504 && positions0[1].y != middle) {
-                move_to(positions0[1].type, 0, middle - positions0[1].y, tick - 502);
-            } else if (tick >= 504 && tick < 506 && positions0[2].y != middle - 2 * delta) {
-                move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 504);
+            } 
+            
+            if (tick >= 550 && tick < 552 && positions0[0].y != middle + 2 * delta) {
+                move_to(positions0[0].type, 0, middle + 2 * delta - positions0[0].y, tick - 550);
+            } else if (tick >= 552 && tick < 554 && positions0[1].y != middle) {
+                move_to(positions0[1].type, 0, middle - positions0[1].y, tick - 552);
+            } else if (tick >= 554 && tick < 556 && positions0[2].y != middle - 2 * delta) {
+                move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 554);
             }
             
             
             if (tick >= 6 && tick < 8 && positions1[0].x != left) {
-                move_to(positions1[0].type, middle - positions1[0].x, 0, tick - 6);
+                move_to(positions1[0].type, left - positions1[0].x, 0, tick - 6);
             } else if (tick >= 8 && tick < 10 && positions1[1].x != right) {
                 move_to(positions1[1].type, right - positions1[1].x, 0, tick - 8);
-            } else if (tick >= 506 && tick < 508 && positions1[0].y != middle) {
-                move_to(positions1[0].type, 0, middle - positions1[0].y, tick - 506);
-            } else if (tick >= 508 && tick < 510 && positions1[1].y != middle + 2*delta) {
-                move_to(positions1[1].type, 0, middle+2*delta - positions1[1].y, tick - 508);
+            } 
+            
+            if (tick >= 556 && tick < 558 && positions1[0].y != middle) {
+                move_to(positions1[0].type, 0, middle - positions1[0].y, tick - 556);
+            } else if (tick >= 558 && tick < 560 && positions1[1].y != middle + 2*delta) {
+                move_to(positions1[1].type, 0, middle + 2 * delta - positions1[1].y, tick - 558);
             }
+            if (tick == 600)
+                System.out.println();
             return;
         }
         
-        if (tick >= 1000 && tick < 1010) {
-            // scale
-            if (tick >= 1000 && tick < 1002) {
-                scale(positions0[0].type, left, middle + (right - middle) / 2, factor, tick - 1000);
-            } else if (tick >= 1002 && tick < 1004) {
-                scale(positions0[1].type, middle, middle + (right - middle) / 2, factor, tick - 1002);
-            } else if (tick >= 1004 && tick < 1006) {
-                scale(positions0[2].type, right, middle + (right - middle) / 2, factor, tick - 1004);
-            } else if (tick >= 1006 && tick < 1008) {
-                scale(positions1[0].type, middle, middle + (right - middle) / 2, factor, tick - 1006);
-            } else if (tick >= 1008 && tick < 1010) {
-                scale(positions1[1].type, right, middle + (right - middle) / 2, factor, tick - 1008);
+        if (tick >= 1000 && tick < 1060) {
+            
+            tick -= 1000;
+            int group = tick / 2 + 1;
+            
+            double l = left + (group - 1) * 3 * delta - delta;
+            double r = left + (group) * 3 * delta - delta;
+                
+            if (tick % 2 == 0) {
+                // select
+                System.out.println("group " + group + " " + l + " " + r);
+                move.setAction(ActionType.CLEAR_AND_SELECT);
+                move.setLeft(l);
+                move.setRight(r);          
+                move.setTop(0);
+                move.setBottom(world.getHeight());                
+            } else {
+                // scale                
+                move.setAction(ActionType.SCALE);
+                move.setFactor(factor);
+                move.setX(l + delta);
+                move.setY(middle + (right-middle) / 2);
             }
-            return ;
-        }        
+            
+            return;
+        }
         
-        if (tick >= 1500 && tick < 1506) {
+        if (tick >= 1500 && tick < 1508) {
             // merge
             if (tick >= 1500 && tick < 1502) {
                 move_to(positions0[0].type, middle - left, 0, tick - 1500);
             } else if (tick >= 1502 && tick < 1504) {
                 move_to(positions0[2].type, middle - right, 0, tick - 1502);
             } else if (tick >= 1504 && tick < 1506) {
-                move_to(positions1[1].type, middle - right, 0, tick - 1504);
+                move_to(positions1[0].type, middle - left, 0, tick - 1504);
+            }  else if (tick >= 1506 && tick < 1508) {
+                move_to(positions1[1].type, middle - right, 0, tick - 1506);
             }
+            if (tick == 1505)
+                System.out.println();
             return;
         }
         
-        if (tick >= 2000 && tick < 2002) {
-            tick -= 2000;
+        if (tick >= 2100 && tick < 2102) {
+            tick -= 2100;
             if (tick == 0) {
                 move.setAction(ActionType.CLEAR_AND_SELECT);
                 move.setRight(world.getWidth());
@@ -198,19 +219,22 @@ public final class MyStrategy implements Strategy {
             
             if (tick == 1) {            
                 move.setAction(ActionType.SCALE);
-                move.setX(middle);
-                move.setY(middle);
+                move.setX(middle + 12 * delta + (right - middle) / 2);
+                move.setY(middle - 6 * delta + (right - middle) / 2);
                 move.setFactor(1.0 / factor);
                 move.setMaxSpeed(game.getTankSpeed());
             }
+            if (tick == 2001)
+                System.out.println();
             return;
         }
         
-        if (tick == 2002) {
+        if (tick == 2102) {
             // select all
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setRight(world.getWidth());
-            move.setBottom(world.getHeight());       
+            move.setBottom(world.getHeight());    
+            System.out.println();   
             return ;
         };
     }
