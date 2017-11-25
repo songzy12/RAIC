@@ -80,11 +80,12 @@ public final class MyStrategy implements Strategy {
                 continue;
             if (v.getType() != type) 
                 continue;
-            //System.out.println(v.getType() + " " + v.getX() + " " + v.getY());
-            if (v.getX() < x)
-                v_ = v;
-            if (v.getY() < y)
-                v_ = v;
+            System.out.println(v.getType() + " " + v.getX() + " " + v.getY());
+            if (v.getX() <= x && v.getY() <= y) {
+                x = v.getX();
+                y = v.getY();
+                v_ = v;   
+            }
         }
         return v_;
     }
@@ -112,8 +113,6 @@ public final class MyStrategy implements Strategy {
     }
     
     private void scale(VehicleType v, int tick, double factor) {
-        Vehicle v_ = find_vehicle(me, v);
-        double [] pv = {v_.getX(), v_.getY()};
         
         if (tick == 0) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -124,7 +123,7 @@ public final class MyStrategy implements Strategy {
         
         if (tick == 1) {            
             move.setAction(ActionType.SCALE);
-            v_ = find_vehicle(me, v);
+            Vehicle v_ = find_vehicle(me, v);
             double delta = game.getVehicleRadius();
             double [] origin = {v_.getX(), v_.getY()};
             move.setX(origin[0]);
@@ -135,15 +134,18 @@ public final class MyStrategy implements Strategy {
     }
     
     private void line_up(int tick) {
+        double f = 2;
+        if (tick < 2)
+            scale(types[1], tick, f);
         
         // move further
-        if (tick < 10) {
+        /*if (tick < 10) {
             for (int i = 0; i < 5; ++i) {
                 double delta = 30 * game.getVehicleRadius() + 2 * i * game.getVehicleRadius();
                 
                 move_to(types[i], delta, delta, tick - i * 2);
             }
-        }
+        }*/
         
         // scale 
         if (tick >= 500 && tick < 510) {
