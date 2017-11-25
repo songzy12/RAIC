@@ -141,12 +141,12 @@ public final class MyStrategy implements Strategy {
                 move_to(positions0[2].type, right - positions0[2].x, 0, tick - 4);
             } 
             
-            if (tick >= 550 && tick < 552 && positions0[0].y != middle + 2 * delta) {
-                move_to(positions0[0].type, 0, middle + 2 * delta - positions0[0].y, tick - 550);
-            } else if (tick >= 552 && tick < 554 && positions0[1].y != middle) {
-                move_to(positions0[1].type, 0, middle - positions0[1].y, tick - 552);
-            } else if (tick >= 554 && tick < 556 && positions0[2].y != middle - 2 * delta) {
-                move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 554);
+            if (tick >= 500 && tick < 502 && positions0[0].y != middle + 2 * delta) {
+                move_to(positions0[0].type, 0, middle + 2 * delta - positions0[0].y, tick - 500);
+            } else if (tick >= 502 && tick < 504 && positions0[1].y != middle) {
+                move_to(positions0[1].type, 0, middle - positions0[1].y, tick - 502);
+            } else if (tick >= 504 && tick < 506 && positions0[2].y != middle - 2 * delta) {
+                move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 504);
             }
             
             
@@ -156,24 +156,26 @@ public final class MyStrategy implements Strategy {
                 move_to(positions1[1].type, right - positions1[1].x, 0, tick - 8);
             } 
             
-            if (tick >= 556 && tick < 558 && positions1[0].y != middle) {
-                move_to(positions1[0].type, 0, middle - positions1[0].y, tick - 556);
-            } else if (tick >= 558 && tick < 560 && positions1[1].y != middle + 2*delta) {
-                move_to(positions1[1].type, 0, middle + 2 * delta - positions1[1].y, tick - 558);
+            if (tick >= 506 && tick < 508 && positions1[0].y != middle) {
+                move_to(positions1[0].type, 0, middle - positions1[0].y, tick - 506);
+            } else if (tick >= 508 && tick < 510 && positions1[1].y != middle + 2*delta) {
+                move_to(positions1[1].type, 0, middle + 2 * delta - positions1[1].y, tick - 508);
             }
-            if (tick == 600)
+            if (tick == 510)
                 System.out.println();
             return;
         }
         
-        if (tick >= 1000 && tick < 1060) {
-            
-            tick -= 1000;
-            int group = tick / 2 + 1;
-            
+        if (tick >= 1000 && tick < 1360) {
+            int step = (tick - 1000) / 60;
+            int start = step * 6 + 1;
+            int group = ((tick - 1000) % 60) / 2 + 1;
+            if (group < start)
+                return;
+                    
             double l = left + (group - 1) * 3 * delta - delta;
             double r = left + (group) * 3 * delta - delta;
-                
+            
             if (tick % 2 == 0) {
                 // select
                 System.out.println("group " + group + " " + l + " " + r);
@@ -189,9 +191,9 @@ public final class MyStrategy implements Strategy {
                 move.setX(l + delta);
                 move.setY(middle + (right-middle) / 2);
             }
-            
             return;
         }
+        
         
         if (tick >= 1500 && tick < 1508) {
             // merge
@@ -210,6 +212,7 @@ public final class MyStrategy implements Strategy {
         }
         
         if (tick >= 2100 && tick < 2102) {
+            // scale
             tick -= 2100;
             if (tick == 0) {
                 move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -224,7 +227,7 @@ public final class MyStrategy implements Strategy {
                 move.setFactor(1.0 / factor);
                 move.setMaxSpeed(game.getTankSpeed());
             }
-            if (tick == 2001)
+            if (tick == 1)
                 System.out.println();
             return;
         }
