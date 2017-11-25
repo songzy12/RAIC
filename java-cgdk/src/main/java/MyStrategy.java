@@ -2,7 +2,7 @@ import model.*;
 import java.util.Arrays;
 public final class MyStrategy implements Strategy {
     
-    public double[] findEnemy(Player me) {
+    public double[] findEnemy(Player me, boolean is_tank) {
         double x = 1024, y = 1024;       
         
         for (Vehicle v: updated_vehicles) {
@@ -10,8 +10,12 @@ public final class MyStrategy implements Strategy {
                 continue;
             if (v.getDurability() == 0)
                 continue;
-                x = v.getX();
-                y = v.getY();
+            
+            x = v.getX();
+            y = v.getY();
+            if (!is_tank)
+                break;
+            if (v.getType() == VehicleType.TANK)
                 break;
         }
         return new double[]{x, y};
@@ -109,7 +113,7 @@ public final class MyStrategy implements Strategy {
             return;
         }*/
         
-        // move figher to arrv
+        // move figher to middle
         
         if (tick == 50) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -129,27 +133,6 @@ public final class MyStrategy implements Strategy {
             move.setY(end[1] - start[1] + 3);
             return;
         }
-        
-        // scale tank
-        
-        /*if (tick == 300) {
-            move.setAction(ActionType.ADD_TO_SELECTION);
-            move.setVehicleType(VehicleType.TANK);
-            move.setRight(world.getWidth());
-            move.setBottom(world.getHeight());       
-            return;
-        }
-        
-        if (tick == 301) {
-            move.setAction(ActionType.SCALE);
-            double [] start = getTopLeft(me, VehicleType.TANK);
-            move.setX(start[0]);
-            move.setY(start[1]);
-            move.setFactor(2);
-            return;
-        }*/
-        
-        // move tank to arrv
         
         if (tick == 52) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -171,8 +154,6 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        // move helicopter to ifv
-        
         if (tick == 54) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
             move.setVehicleType(VehicleType.HELICOPTER);
@@ -191,27 +172,6 @@ public final class MyStrategy implements Strategy {
             move.setY(end[1] - start[1] + 3);
             return;
         }
-        
-        // scale ifv
-        
-        /*if (tick == 750) {
-            move.setAction(ActionType.ADD_TO_SELECTION);
-            move.setVehicleType(VehicleType.IFV);
-            move.setRight(world.getWidth());
-            move.setBottom(world.getHeight());       
-            return;
-        }
-        
-        if (tick == 751) {
-            move.setAction(ActionType.SCALE);
-            double [] start = getTopLeft(me, VehicleType.IFV);
-            move.setX(start[0]);
-            move.setY(start[1]);
-            move.setFactor(2);
-            return;
-        }*/
-        
-        // move ifv to arrv
         
         if (tick == 56) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -257,7 +217,7 @@ public final class MyStrategy implements Strategy {
         
         // select all
         
-        if (tick == 1000) {
+        if (tick == 60) {
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setRight(world.getWidth());
             move.setBottom(world.getHeight());       
@@ -275,59 +235,16 @@ public final class MyStrategy implements Strategy {
             return;
         }*/
         
-        if (tick == 2500) {
-            double[] start = findEnemy(world.getOpponentPlayer());
-            double[] end = findEnemy(me);
-            
-            System.out.println();
-            System.out.println(Arrays.toString(start));
-            System.out.println(Arrays.toString(end));
-            
-            move.setAction(ActionType.MOVE);
-            move.setX(end[0] - start[0]);
-            move.setY(end[1] - start[1]);
-            move.setMaxSpeed(game.getTankSpeed());
-            return;
+        if (tick < 4000 && tick % 500 == 0) {
+            double[] start = findEnemy(world.getOpponentPlayer(), true);
+            move.setAction(ActionType.TACTICAL_NUCLEAR_STRIKE);
+            move.setX(start[0]);
+            move.setY(start[1]);
         }
         
-        
-        if (tick == 5000) {
-            double[] start = findEnemy(world.getOpponentPlayer());
-            double[] end = findEnemy(me);
-            
-            System.out.println();
-            System.out.println(Arrays.toString(start));
-            System.out.println(Arrays.toString(end));
-            
-            move.setAction(ActionType.MOVE);
-            move.setX(end[0] - start[0]);
-            move.setY(end[1] - start[1]);
-            move.setMaxSpeed(game.getTankSpeed());
-            return;
-        }
-        
-        
-        
-        if (tick == 7500) {
-            double[] start = findEnemy(world.getOpponentPlayer());
-            double[] end = findEnemy(me);
-            
-            System.out.println();
-            System.out.println(Arrays.toString(start));
-            System.out.println(Arrays.toString(end));
-            
-            move.setAction(ActionType.MOVE);
-            move.setX(end[0] - start[0]);
-            move.setY(end[1] - start[1]);
-            move.setMaxSpeed(game.getTankSpeed());
-            return;
-        }
-        
-        
-        
-        if (tick == 1000) {
-            double[] start = findEnemy(world.getOpponentPlayer());
-            double[] end = findEnemy(me);
+        if (tick >= 4000 && tick % 1000 == 0) {
+            double[] start = findEnemy(world.getOpponentPlayer(), false);
+            double[] end = findEnemy(me, false);
             
             System.out.println();
             System.out.println(Arrays.toString(start));
@@ -340,6 +257,7 @@ public final class MyStrategy implements Strategy {
             return;
         }
     }
+    
     private Vehicle[] vehicles;    
     private Vehicle[] updated_vehicles;
     private VehicleType[] types = {VehicleType.TANK, 
