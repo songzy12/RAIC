@@ -26,7 +26,7 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick % 1200 == 0) {
+        if (tick >= 3000 && tick % 1200 == 0) {
             Vehicle v = find_nearest_enemy(world.getOpponentPlayer(), true);
             move.setAction(ActionType.TACTICAL_NUCLEAR_STRIKE);
             move.setX(v.getX());
@@ -34,7 +34,7 @@ public final class MyStrategy implements Strategy {
             move.setVehicleId(find_vehicle(me, VehicleType.ARRV).getId());
         }
         
-        if (tick > 3000 && tick % 500 == 0) {
+        if (tick >= 3000 && tick % 500 == 0) {
             Vehicle v1 = find_nearest_enemy(world.getOpponentPlayer(), false);
             Vehicle v2 = find_nearest_enemy(me, false);
             double[] start = {v1.getX(), v1.getY()};
@@ -107,7 +107,7 @@ public final class MyStrategy implements Strategy {
         }
     }
     
-    private void scale(VehicleType v, int tick, double factor) {
+    private void scale(VehicleType v, double x, double y, double factor, int tick) {
         
         if (tick == 0) {
             move.setAction(ActionType.CLEAR_AND_SELECT);
@@ -118,11 +118,8 @@ public final class MyStrategy implements Strategy {
         
         if (tick == 1) {            
             move.setAction(ActionType.SCALE);
-            Vehicle v_ = find_vehicle(me, v);
-            double delta = 10 * game.getVehicleRadius();
-            double [] origin = {v_.getX(), v_.getY()};
-            move.setX(origin[0] + delta);
-            move.setY(origin[1] + delta);
+            move.setX(x);
+            move.setY(y);
             move.setFactor(factor);
             move.setMaxSpeed(game.getTankSpeed());
         }
@@ -132,9 +129,10 @@ public final class MyStrategy implements Strategy {
         
         double left = 18, middle = 92, right = 166;
         double delta = game.getVehicleRadius();
+        double factor = 3;
         
-        // permutate
-        if (tick < 1000) {
+        if (tick < 1000) {        
+            // permutate
             if (tick < 2 && positions0[0].x != left) {
                 move_to(positions0[0].type, left - positions0[0].x, 0, tick);
             } else if (tick >= 2 && tick < 4 && positions0[1].x != middle) {
@@ -148,9 +146,8 @@ public final class MyStrategy implements Strategy {
             } else if (tick >= 504 && tick < 506 && positions0[2].y != middle - 2 * delta) {
                 move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 504);
             }
-        }
-        
-        if (tick < 1000) {
+            
+            
             if (tick >= 6 && tick < 8 && positions1[0].x != left) {
                 move_to(positions1[0].type, middle - positions1[0].x, 0, tick - 6);
             } else if (tick >= 8 && tick < 10 && positions1[1].x != right) {
@@ -160,65 +157,35 @@ public final class MyStrategy implements Strategy {
             } else if (tick >= 508 && tick < 510 && positions1[1].y != middle + 2*delta) {
                 move_to(positions1[1].type, 0, middle+2*delta - positions1[1].y, tick - 508);
             }
-        }
-        
-        
-        /*
-        // scale 
-        if (tick >= 200 && tick < 210) {
-            double factor = 3;
-            for (int i = 0; i < 5; ++i)
-                scale(types[i], tick - 200 - i * 2, factor);
             return;
         }
         
-        // intersect
-        if (tick >= 500 && tick < 510) {
-            double mid_x = 0;
-            for (int i = 0; i < 5; ++i) {
-                Vehicle v_ =  find_vehicle(me, types[i]);
-                if (Math.abs(v_.getX() - mid_x) > delta)
-                    move_to(types[i], mid_x + - v_.getX() , 0, tick - 500 - i * 2);
+        if (tick >= 1000 && tick < 1010) {
+            // scale
+            if (tick >= 1000 && tick < 1002) {
+                scale(positions0[0].type, left, middle + (right - middle) / 2, factor, tick - 1000);
+            } else if (tick >= 1002 && tick < 1004) {
+                scale(positions0[1].type, middle, middle + (right - middle) / 2, factor, tick - 1002);
+            } else if (tick >= 1004 && tick < 1006) {
+                scale(positions0[2].type, right, middle + (right - middle) / 2, factor, tick - 1004);
+            } else if (tick >= 1006 && tick < 1008) {
+                scale(positions1[0].type, middle, middle + (right - middle) / 2, factor, tick - 1006);
+            } else if (tick >= 1008 && tick < 1010) {
+                scale(positions1[1].type, right, middle + (right - middle) / 2, factor, tick - 1008);
             }
-            return;
-        }*/
+            return ;
+        }
         
-        
-        if (tick >= 1500 && tick < 1510) {
-            double mid_y = 0;            
-            for (int i = 0; i < 5; ++i) {
-                Vehicle v_ =  find_vehicle(me, types[i]);
-                if (Math.abs(v_.getY() - mid_y) > delta)
-                    move_to(types[i], 0, mid_y - v_.getY() , tick - 1500 - i * 2);
-            }
-            return;
+        if (tick >= 1500 && tick < 1506) {
+            // merge
         }
         
         if (tick >= 2000 && tick < 2002) {
-            double mid_x = 0;                    
-            double mid_y = 0;
-                
-            tick -= 2000;
-            double factor = 1.0 / 3;
-            if (tick == 0) {
-                move.setAction(ActionType.CLEAR_AND_SELECT);
-                move.setRight(world.getWidth());
-                move.setBottom(world.getHeight()); 
-            }
-            
-            if (tick == 1) {            
-                move.setAction(ActionType.SCALE);
-                move.setX(mid_x);
-                move.setY(mid_y);
-                move.setFactor(factor);
-                move.setMaxSpeed(game.getTankSpeed());
-            }
-            return;
+            // rotate
         }
-            
         
-        // select all
-        if (tick == 2500) {
+        if (tick == 2002) {
+            // select all
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setRight(world.getWidth());
             move.setBottom(world.getHeight());       
