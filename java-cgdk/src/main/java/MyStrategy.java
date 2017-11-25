@@ -178,6 +178,13 @@ public final class MyStrategy implements Strategy {
         
         if (tick >= 1500 && tick < 1506) {
             // merge
+            if (tick >= 1500 && tick < 1502) {
+                move_to(positions0[0].type, middle - positions0[0].x, 0, tick - 1500);
+            } else if (tick >= 1502 && tick < 1504) {
+                move_to(positions0[2].type, middle - positions0[2].x, 0, tick - 1502);
+            } else if (tick >= 1504 && tick < 1506) {
+                move_to(positions1[0].type, middle - positions1[0].x, 0, tick - 1504);
+            }
         }
         
         if (tick >= 2000 && tick < 2002) {
