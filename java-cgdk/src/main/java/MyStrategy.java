@@ -9,17 +9,20 @@ public final class MyStrategy implements Strategy {
         // System.out.println(getNewVehicles().length); // this is 1000 at tick_index 0
         // System.out.println(world.getHeight() + " " + world.getWidth()); // 1024
         
+        this.me = me;
+        this.world = world;
+        this.game = game;
         this.move = move;
         
         int tick = world.getTickIndex();
         
         if (tick == 0)
-            init_vehicles(me, world);
+            init_vehicles();
         
-        update_vehicle(world);
+        update_vehicle();
         
         if (tick < 1000) {
-            line_up(me, world, game, tick);
+            line_up(tick);
             return;
         }
         
@@ -34,14 +37,14 @@ public final class MyStrategy implements Strategy {
             return;
         }*/
         
-        if (tick < 4000 && tick % 500 == 0) {
+        if (tick < 1000 && tick % 500 == 0) {
             double[] start = find_nearest_enemy(world.getOpponentPlayer(), true);
             move.setAction(ActionType.TACTICAL_NUCLEAR_STRIKE);
             move.setX(start[0]);
             move.setY(start[1]);
         }
         
-        if (tick >= 4000 && tick % 500 == 0) {
+        if (tick >= 1000 && tick % 500 == 0) {
             double[] start = find_nearest_enemy(world.getOpponentPlayer(), false);
             double[] end = find_nearest_enemy(me, false);
             
@@ -59,6 +62,10 @@ public final class MyStrategy implements Strategy {
     
     private Vehicle[] origin_vehicles;    
     private Vehicle[] vehicles;
+    
+    private World world;
+    private Player me;
+    private Game game;
     private Move move;
     
     private VehicleType[] types = {VehicleType.TANK, 
@@ -67,7 +74,7 @@ public final class MyStrategy implements Strategy {
                                    VehicleType.FIGHTER,
                                    VehicleType.ARRV};
     
-    private void update_vehicle(World world) {
+    private void update_vehicle() {
         VehicleUpdate[] vehicle_updates = world.getVehicleUpdates();
         // System.out.println(tick);
         
@@ -117,7 +124,7 @@ public final class MyStrategy implements Strategy {
         return new double[] {x, y};
     }
     
-    private void init_vehicles(Player me, World world) {
+    private void init_vehicles() {
         origin_vehicles = world.getNewVehicles();
         vehicles = origin_vehicles;
         
@@ -147,9 +154,31 @@ public final class MyStrategy implements Strategy {
         System.out.println();
     }
     
-    private double[][] positions = new double[5][2];        
+    private double[][] positions = new double[5][2];      
+
+    private void mix(VehicleType v1, VehicleType v2) {
+        double [] pv1 = find_vehicle(me, v1);
+        double [] pv2 = find_vehicle(me, v2);
+        
+        
+    }
     
-    private void line_up(Player me, World world, Game game, int tick) {        
+    private void scale(VehicleType v, int tick) {
+        double [] pv = find_vehicle(me, v);        
+        
+        int mod = 2;
+        
+        if (tick % mod == 0) {
+            move.setAction(ActionType.CLEAR_AND_SELECT);
+            move.setVehicleType(VehicleType.FIGHTER);
+            move.setRight(world.getWidth());
+            move.setBottom(world.getHeight()); 
+            
+        }
+        
+    }
+    
+    private void line_up(int tick) {        
         // scale ARRV
         
         /*if (tick == 1) {
