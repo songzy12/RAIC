@@ -4,3 +4,14 @@
 * fighter: air unit, effective against other air units;
 * ARRV – armored recovery and repair vehicle: repairs damaged vehicles
 
+
+
+
+### Round 1
+
+| Rating | 17                                       |
+| ------ | ---------------------------------------- |
+| Place  | [496](http://russianaicup.ru/contest/2/standings/page/5#standings-row-for-place-496) |
+| Game # | [19](http://russianaicup.ru/profile/songzy12/contest2) |
+| Win #  | 53%                                      |
+
