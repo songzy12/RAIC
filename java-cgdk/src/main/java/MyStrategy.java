@@ -99,7 +99,7 @@ public final class MyStrategy implements Strategy {
         }
         
         if (tick == 1) {
-            System.out.println("move_to, " + x + " " + y);
+            System.out.println(v + " move_to " + x + " " + y);
             move.setAction(ActionType.MOVE);
             move.setX(x);
             move.setY(y);
@@ -174,21 +174,36 @@ public final class MyStrategy implements Strategy {
                 scale(positions1[1].type, right, middle + (right - middle) / 2, factor, tick - 1008);
             }
             return ;
-        }
+        }        
         
         if (tick >= 1500 && tick < 1506) {
             // merge
             if (tick >= 1500 && tick < 1502) {
-                move_to(positions0[0].type, middle - positions0[0].x, 0, tick - 1500);
+                move_to(positions0[0].type, middle - left, 0, tick - 1500);
             } else if (tick >= 1502 && tick < 1504) {
-                move_to(positions0[2].type, middle - positions0[2].x, 0, tick - 1502);
+                move_to(positions0[2].type, middle - right, 0, tick - 1502);
             } else if (tick >= 1504 && tick < 1506) {
-                move_to(positions1[0].type, middle - positions1[0].x, 0, tick - 1504);
+                move_to(positions1[1].type, middle - right, 0, tick - 1504);
             }
+            return;
         }
         
         if (tick >= 2000 && tick < 2002) {
-            // rotate
+            tick -= 2000;
+            if (tick == 0) {
+                move.setAction(ActionType.CLEAR_AND_SELECT);
+                move.setRight(world.getWidth());
+                move.setBottom(world.getHeight()); 
+            }
+            
+            if (tick == 1) {            
+                move.setAction(ActionType.SCALE);
+                move.setX(middle);
+                move.setY(middle);
+                move.setFactor(1.0 / factor);
+                move.setMaxSpeed(game.getTankSpeed());
+            }
+            return;
         }
         
         if (tick == 2002) {
