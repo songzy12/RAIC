@@ -44,39 +44,73 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick >= 3000 && tick % 500 == 0) {
-            Vehicle v1 = find_nearest_enemy(world.getOpponentPlayer(), false);
-            Vehicle v2 = find_nearest_enemy(me, false);
-            double[] start = {v1.getX(), v1.getY()};
-            double[] end = {v2.getX(), v2.getY()};
-            
-            System.out.println();
-            System.out.println(Arrays.toString(start));
-            System.out.println(Arrays.toString(end));
-            
-            move.setAction(ActionType.MOVE);
-            move.setX(end[0] - start[0]);
-            move.setY(end[1] - start[1]);
-            move.setMaxSpeed(game.getTankSpeed() * game.getSwampTerrainSpeedFactor());
-            return;
+        if (tick >= 3000 && (tick % 60 == 0 || tick % 60 == 30)) {
+            if (tick % 60 == 0) {
+                //re_line_up();
+            }
+            if (tick % 60 == 30) {
+                Vehicle v1 = find_vehicle(me);
+                Vehicle v2 = find_vehicle(world.getOpponentPlayer());
+                
+                double[] start = {v1.getX(), v1.getY()};
+                double[] end = {v2.getX(), v2.getY()};
+                
+                
+                
+                System.out.println();
+                System.out.println(Arrays.toString(start));
+                System.out.println(Arrays.toString(end));
+                
+                move.setAction(ActionType.MOVE);
+                move.setX(end[0] - start[0]);
+                move.setY(end[1] - start[1]);
+                move.setMaxSpeed(game.getTankSpeed() * game.getSwampTerrainSpeedFactor());
+                return;
+            }
         }
     }
     
-    private Vehicle find_nearest_enemy(Player me, boolean is_tank) {
+    private void re_line_up(int tick) {
+        double [] position = get_center(me);
+        
+        move.setAction(ActionType.SCALE);
+        move.setX(position[0]);
+        move.setY(position[1]);
+        move.setFactor(1 / factor);
+        move.setMaxSpeed(game.getTankSpeed());
+    }
+    
+    private double [] get_center(Player me) {
+        double x = 0, y = 0;
+        int cnt = 0;
+        
+        for (Vehicle v: vehicles) {
+            if (v.getPlayerId() != me.getId())
+                continue;
+            if (v.getDurability() == 0)
+                continue;
+            x += v.getX();
+            y += v.getY();
+            cnt += 1;
+        }
+        return new double[] {x / cnt, y / cnt};
+    }
+    
+    private Vehicle find_vehicle(Player me) {
         Vehicle v_ = null;
         double x = 1024, y = 1024;       
         
         for (Vehicle v: vehicles) {
-            if (v.getPlayerId() == me.getId())
+            if (v.getPlayerId() != me.getId())
                 continue;
             if (v.getDurability() == 0)
                 continue;
             
-            v_ = v;
-            if (!is_tank)
-                break;
-            if (v.getType() == VehicleType.TANK)
-                break;
+            if (v.getX() <= x || v.getY() <= y) {
+                x = v.getX();
+                y = v.getY();
+                v_ = v;   
+            }
         }
         return v_;
     }
@@ -158,8 +192,9 @@ public final class MyStrategy implements Strategy {
             
             if (tick >= 6 && tick < 8 && positions1[0].x != left) {
                 move_to(positions1[0].type, left - positions1[0].x, 0, tick - 6);
-            } else if (tick >= 8 && tick < 10 && positions1[1].x != right) {
-                move_to(positions1[1].type, right - positions1[1].x, 0, tick - 8);
+            } else if (tick >= 8 && tick < 10 && positions1[1].x != middle) {
+                // here can not be right, since it may originally be in left
+                move_to(positions1[1].type, middle - positions1[1].x, 0, tick - 8);
             } 
             
             if (tick >= 506 && tick < 508 && positions1[0].y != middle) {
@@ -209,9 +244,7 @@ public final class MyStrategy implements Strategy {
                 move_to(positions0[2].type, middle - right, 0, tick - 1602);
             } else if (tick >= 1604 && tick < 1606) {
                 move_to(positions1[0].type, middle - left, 0, tick - 1604);
-            }  else if (tick >= 1606 && tick < 1608) {
-                move_to(positions1[1].type, middle - right, 0, tick - 1606);
-            }
+            }  
             if (tick == 1605)
                 System.out.println();
             return;
