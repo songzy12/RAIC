@@ -21,13 +21,13 @@ public final class MyStrategy implements Strategy {
         
         update_vehicle();
         
-        if (tick < 2500) {
+        if (tick < 2000) {
             line_up(tick);
             return;
         }
         
-        if (tick >= 2500 && tick < 2502) {
-            tick -= 2500;
+        if (tick >= 2000 && tick < 2002) {
+            tick -= 2000;
             if (tick == 0) {
                 move.setAction(ActionType.CLEAR_AND_SELECT);
                 move.setRight(world.getWidth());
@@ -44,8 +44,8 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick >= 3000 && (tick % 60 == 20 || tick % 60 == 30)) {
-            if (tick % 60 == 20) {
+        if (tick >= 2500 && (tick % 60 == 25 || tick % 60 == 30)) {
+            if (tick % 60 == 25) {
                 re_line_up(tick);
             }
             if (tick % 60 == 30) {
@@ -72,7 +72,7 @@ public final class MyStrategy implements Strategy {
         move.setAction(ActionType.SCALE);
         move.setX(position[0]);
         move.setY(position[1]);
-        move.setFactor(1 / factor);
+        move.setFactor(0.1);
         move.setMaxSpeed(game.getTankSpeed());
     }
     
@@ -189,7 +189,7 @@ public final class MyStrategy implements Strategy {
     
     private void line_up(int tick) {
         
-        if (tick < 1000) {        
+        if (tick < 700) {        
             // permutate
             if (tick < 2 && positions0[0].x != left) {
                 move_to(positions0[0].type, left - positions0[0].x, 0, tick);
@@ -199,12 +199,12 @@ public final class MyStrategy implements Strategy {
                 move_to(positions0[2].type, right - positions0[2].x, 0, tick - 4);
             } 
             
-            if (tick >= 500 && tick < 502 && positions0[0].y != middle + 2 * delta) {
-                move_to(positions0[0].type, 0, middle + 2 * delta - positions0[0].y, tick - 500);
-            } else if (tick >= 502 && tick < 504 && positions0[1].y != middle) {
-                move_to(positions0[1].type, 0, middle - positions0[1].y, tick - 502);
-            } else if (tick >= 504 && tick < 506 && positions0[2].y != middle - 2 * delta) {
-                move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 504);
+            if (tick >= 350 && tick < 352 && positions0[0].y != middle + 2 * delta) {
+                move_to(positions0[0].type, 0, middle + 2 * delta - positions0[0].y, tick - 350);
+            } else if (tick >= 352 && tick < 354 && positions0[1].y != middle) {
+                move_to(positions0[1].type, 0, middle - positions0[1].y, tick - 352);
+            } else if (tick >= 354 && tick < 356 && positions0[2].y != middle - 2 * delta) {
+                move_to(positions0[2].type, 0, middle - 2 * delta - positions0[2].y, tick - 354);
             }
             
             
@@ -215,20 +215,20 @@ public final class MyStrategy implements Strategy {
                 move_to(positions1[1].type, middle - positions1[1].x, 0, tick - 8);
             } 
             
-            if (tick >= 506 && tick < 508 && positions1[0].y != middle) {
-                move_to(positions1[0].type, 0, middle - positions1[0].y, tick - 506);
-            } else if (tick >= 508 && tick < 510 && positions1[1].y != middle + 2*delta) {
-                move_to(positions1[1].type, 0, middle + 2 * delta - positions1[1].y, tick - 508);
+            if (tick >= 356 && tick < 358 && positions1[0].y != middle) {
+                move_to(positions1[0].type, 0, middle - positions1[0].y, tick - 356);
+            } else if (tick >= 358 && tick < 360 && positions1[1].y != middle + 2*delta) {
+                move_to(positions1[1].type, 0, middle + 2 * delta - positions1[1].y, tick - 358);
             }
-            if (tick == 510)
+            if (tick == 360)
                 System.out.println();
             return;
         }
         
-        if (tick >= 1000 && tick < 1360) {
-            int step = (tick - 1000) / 60;
+        if (tick >= 700 && tick < 1060) {
+            int step = (tick - 700) / 60;
             int start = step * 6 + 1;
-            int group = ((tick - 1000) % 60) / 2 + 1;
+            int group = ((tick - 700) % 60) / 2 + 1;
             if (group < start)
                 return;
                     
@@ -254,25 +254,25 @@ public final class MyStrategy implements Strategy {
         }
         
         
-        if (tick >= 1600 && tick < 1608) {
+        if (tick >= 1200 && tick < 1206) {
             // merge
-            if (tick >= 1600 && tick < 1602) {
-                move_to(positions0[0].type, middle - left, 0, tick - 1600);
-            } else if (tick >= 1602 && tick < 1604) {
-                move_to(positions0[2].type, middle - right, 0, tick - 1602);
-            } else if (tick >= 1604 && tick < 1606) {
-                move_to(positions1[0].type, middle - left, 0, tick - 1604);
+            if (tick >= 1200 && tick < 1202) {
+                move_to(positions0[0].type, middle - left, 0, tick - 1200);
+            } else if (tick >= 1202 && tick < 1204) {
+                move_to(positions0[2].type, middle - right, 0, tick - 1202);
+            } else if (tick >= 1204 && tick < 1206) {
+                move_to(positions1[0].type, middle - left, 0, tick - 1204);
             }  
-            if (tick == 1605)
+            if (tick == 1205)
                 System.out.println();
             return;
         }
         
-        if (tick >= 2100 && tick < 2460) {
+        if (tick >= 1500 && tick < 1860) {
             // scale
-            int step = (tick - 2100) / 60;
+            int step = (tick - 1500) / 60;
             int start = step * 6 + 1;
-            int group = ((tick - 2100) % 60) / 2 + 1;
+            int group = ((tick - 1500) % 60) / 2 + 1;
             if (group < start)
                 return;
                     
@@ -297,7 +297,7 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick == 2460) {
+        if (tick == 1860) {
             // select all
             move.setAction(ActionType.ADD_TO_SELECTION);
             move.setRight(world.getWidth());
@@ -369,6 +369,9 @@ public final class MyStrategy implements Strategy {
         System.out.println(Arrays.toString(positions1));
         
         System.out.println("radius: " + game.getVehicleRadius());
+        
+        // System.out.println("distance / speed: " + (right - middle) / (game.getTankSpeed() * game.getSwampTerrainSpeedFactor())); // 333
+        
         System.out.println();
     }
     
