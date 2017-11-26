@@ -46,16 +46,12 @@ public final class MyStrategy implements Strategy {
         
         if (tick >= 3000 && (tick % 60 == 20 || tick % 60 == 30)) {
             if (tick % 60 == 20) {
-                //re_line_up(tick);
+                re_line_up(tick);
             }
             if (tick % 60 == 30) {
-                Vehicle v1 = find_vehicle(me);
+                double[] start = get_center(me);
                 Vehicle v2 = find_vehicle(world.getOpponentPlayer());
-                
-                double[] start = {v1.getX(), v1.getY()};
                 double[] end = {v2.getX(), v2.getY()};
-                
-                
                 
                 System.out.println();
                 System.out.println(Arrays.toString(start));
@@ -89,6 +85,10 @@ public final class MyStrategy implements Strategy {
                 continue;
             if (v.getDurability() == 0)
                 continue;
+            if (v.getType() == VehicleType.HELICOPTER)
+                continue;
+            if (v.getType() == VehicleType.FIGHTER)
+                continue;
             x += v.getX();
             y += v.getY();
             cnt += 1;
@@ -97,22 +97,41 @@ public final class MyStrategy implements Strategy {
     }
     
     private Vehicle find_vehicle(Player me) {
-        Vehicle v_ = null;
-        double x = 1024, y = 1024;       
-        
-        for (Vehicle v: vehicles) {
-            if (v.getPlayerId() != me.getId())
-                continue;
-            if (v.getDurability() == 0)
-                continue;
+        if (this.me.getId() != me.getId()) {
+            Vehicle v_ = null;
+            double [] center = get_center(this.me);
+            double d = 1024 * 1024;
             
-            if (v.getX() <= x || v.getY() <= y) {
-                x = v.getX();
-                y = v.getY();
-                v_ = v;   
+            for (Vehicle v: vehicles) {
+                if (v.getPlayerId() != me.getId())
+                    continue;
+                if (v.getDurability() == 0)
+                    continue;
+                double d_ = v.getDistanceTo(center[0], center[1]);
+                if (d_ < d) {
+                    d = d_;
+                    v_ = v;   
+                }
             }
+            return v_;
+        } else {
+            Vehicle v_ = null;
+            double x = 1024, y = 1024;
+            
+            for (Vehicle v: vehicles) {
+                if (v.getPlayerId() != me.getId())
+                    continue;
+                if (v.getDurability() == 0)
+                    continue;
+                
+                if (v.getX() <= x || v.getY() <= y) {
+                    x = v.getX();
+                    y = v.getY();
+                    v_ = v;   
+                }
+            }
+            return v_;
         }
-        return v_;
     }
     
     private Vehicle find_vehicle(Player me, VehicleType type) {
@@ -147,7 +166,6 @@ public final class MyStrategy implements Strategy {
             move.setAction(ActionType.MOVE);
             move.setX(x);
             move.setY(y);
-            move.setMaxSpeed(game.getTankSpeed() * game.getSwampTerrainSpeedFactor());
         }
     }
     
