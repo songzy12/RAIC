@@ -44,9 +44,9 @@ public final class MyStrategy implements Strategy {
             return;
         }
         
-        if (tick >= 3000 && (tick % 60 == 0 || tick % 60 == 30)) {
-            if (tick % 60 == 0) {
-                //re_line_up();
+        if (tick >= 3000 && (tick % 60 == 20 || tick % 60 == 30)) {
+            if (tick % 60 == 20) {
+                //re_line_up(tick);
             }
             if (tick % 60 == 30) {
                 Vehicle v1 = find_vehicle(me);
