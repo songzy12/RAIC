@@ -7,6 +7,10 @@
 
 
 
+group number is from 1 to 100.
+
+
+
 ### Round 1
 
 | Rating | 17                                       |
