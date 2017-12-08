@@ -72,6 +72,7 @@ public final class MyStrategy implements Strategy {
         if (tick % game.getBaseTacticalNuclearStrikeCooldown() == 0) {
             boolean code = nuclear_strike();
             if (code)
+                
                 return;
         }
         
