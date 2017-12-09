@@ -19,3 +19,18 @@ group number is from 1 to 100.
 | Game # | [19](http://russianaicup.ru/profile/songzy12/contest2) |
 | Win #  | 53%                                      |
 
+### Round 2
+
+1. ​
+
+#### Control Center
+
+1. Cannot decide whether a facility is occupied by me.
+
+#### Nuclear Strike
+
+1. It costs too much time when choosing the vehicle id and (x, y). How?
+
+#### New Vehicles
+
+1. Not dealt
