@@ -21,16 +21,16 @@ group number is from 1 to 100.
 
 ### Round 2
 
-1. ​
-
 #### Control Center
 
-1. Cannot decide whether a facility is occupied by me.
+1. Cannot decide whether a facility is occupied by me already.
 
 #### Nuclear Strike
 
 1. It costs too much time when choosing the vehicle id and (x, y). How?
+2. How to put (x,y) into the center of a enemy cluster, without hurting myself?
 
 #### New Vehicles
 
 1. Not dealt
+
